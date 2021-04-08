@@ -1,7 +1,7 @@
 package controllers
 
 import javax.inject._
-
+import models.CountingModel
 import shared.SharedMessages
 import play.api.mvc._
 
@@ -9,7 +9,16 @@ import play.api.mvc._
 class Application @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
 
   def index = Action {
-    Ok(views.html.index(SharedMessages.itWorks))
+    val c = CountingModel.getCount()
+    Ok(views.html.index(c.toString()))
   }
 
+  def addOne = Action {
+    CountingModel.increment()
+    Ok(CountingModel.getCount().toString())
+  }
+
+  def load = Action {implicit request =>
+    Ok(views.html.react())
+  }
 }
